@@ -1,0 +1,41 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backdate</title>
+
+    <link href="{% static 'libs/semantic.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'core.css' %}" rel="stylesheet"/>
+
+</head>
+<body>
+<div class="ui grid container">
+
+</div>
+<div class="ui choose_person popup">
+    <div class="header">Who is this?</div>
+    <div class="ui form content">
+        <select id="person_selection">
+            <option value="" selected>Unknown</option>
+            {% for person in people %}
+            <option value="{{person.name}}">{{person.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+</body>
+<script>
+        var PICTURES = [
+            {% for pic in pictures %}
+                {{pic.to_json|safe}},
+            {% endfor %}
+        ];
+
+</script>
+<script src="{% static 'libs/jquery-2.2.3.min.js' %}"></script>
+<script src="{% static 'libs/semantic.min.js' %}"></script>
+<script src="{% static 'libs/d3.min.js' %}"></script>
+<script src="{% static 'core.js' %}"></script>
+</html>

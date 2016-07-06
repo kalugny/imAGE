@@ -1,0 +1,26 @@
+.ui.image svg.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding: 1em 1rem 1rem 1em;
+}
+
+.overlay text {
+    font-weight: bold;
+    fill: white;
+}
+
+.rect {
+    fill-opacity: 0.2;
+    stroke-width: 2px;
+}
+
+.Male.rect {
+    stroke: lightblue;
+}
+
+.Female.rect {
+    stroke: lightsalmon;
+}
