@@ -43,6 +43,7 @@ class DetectedFace(models.Model):
     rect_width = models.IntegerField()
     rect_height = models.IntegerField()
     person = models.ForeignKey('Person', null=True)
+    auto_tagged = models.BooleanField(default=False)
 
     def to_dict(self):
         return {

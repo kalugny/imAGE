@@ -67,11 +67,17 @@ def get_gender(gender_text):
 
 
 def detect_faces(batch_number):
-    d = r'C:\Code\faces\FershtmanPics\Assorted\\' + str(batch_number)
+    d = r'C:\Code\faces\FershtmanPics\Assorted' + '\\' + str(batch_number)
 
     fns = os.listdir(d)
     for i, fn in enumerate(fns):
         pathToFileInDisk = d + '\\' + fn
+
+        if Picture.objects.filter(pk=pathToFileInDisk).exists():
+            # Assuming an existing picture is a processed picture
+            print(pathToFileInDisk, 'exists. Skipping...')
+            continue
+
         with open(pathToFileInDisk, 'rb') as f:
             data = f.read()
 
@@ -107,6 +113,32 @@ def detect_faces(batch_number):
                 except Exception as e:
                     print("Exception: ", e)
         time.sleep(0.5)
+
+
+def auto_tag():
+    untagged = DetectedFace.objects.filter(person__isnull=True)
+    id_list = [f.face_id for f in DetectedFace.objects.filter(person__isnull=False)]
+    for face in untagged[80:100]:
+        headers = dict()
+        headers['Ocp-Apim-Subscription-Key'] = _key
+        headers['Content-Type'] = 'application/json'
+        json_req = {
+            'faceId': face.face_id,
+            'faceIds': id_list
+        }
+        res = processRequest(json_req, None, headers, [], similar_url)
+
+        if not res:
+            continue
+
+        print(face.picture.pk)
+        for r in res:
+            print('\t', r['confidence'])
+            if r['confidence'] > 0.85:
+                face.auto_tagged = True
+                face.person = DetectedFace.objects.get(pk=r['faceId']).person
+                print('Tagged', face.person.name, 'in', face.picture.pk)
+                face.save()
 
 
 def index(request):

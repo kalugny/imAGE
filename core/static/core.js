@@ -27,7 +27,8 @@ $(document).ready(function(){
                     .attr('height', f.rect.height * x_factor)
                     .attr('class', 'rect ' + f.gender)
                     .each(function(){
-                        $(this).popup({
+                        var $rect = $(this);
+                        $rect.popup({
                             popup: $('.choose_person.popup'),
                             movePopup: false,
                             exclusive: true,
@@ -36,6 +37,7 @@ $(document).ready(function(){
                             distanceAway: f.rect.width * x_factor,
                             offset: f.rect.height * y_factor / 2,
                             onShow: function(){
+                                var popup = this;
                                 var $select = this.find('select');
                                 $select.val(f.person);
                                 $select.off('change').on('change', function(){
@@ -43,6 +45,7 @@ $(document).ready(function(){
                                     $.post('/update_face/', $.param({face_id: f.face_id, person: val}), function(){
                                         f.person = val;
                                         t.text(f.person + ', ' + f.age);
+                                        $rect.popup('hide');
                                     });
                                 });
                             }
